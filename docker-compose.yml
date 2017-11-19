@@ -1,0 +1,21 @@
+# the 'version' is version for docker-compose.yml
+# don't get confuse with version app
+# https://docs.docker.com/compose/compose-file/
+version: '3'
+services:
+  db:
+    image: postgres:10.1
+    ports:
+      - "5000:5432"
+    container_name: hendrik-db
+  web:
+    build: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/hendrik
+    ports:
+      - "3000:3000"
+    # Use links, don't depend_on
+    # because all data won't persisted if we use depend_on
+    links:
+      - db
